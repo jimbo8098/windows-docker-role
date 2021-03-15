@@ -105,7 +105,7 @@
   changed_when: firewall_res.rc == 0
   failed_when: firewall_res.rc == 2
   register: firewall_res
-  when: open_ports_globally is enabled
+  when: open_ports_globally | bool
 
 - name: Make sure docker is started
   win_service:
