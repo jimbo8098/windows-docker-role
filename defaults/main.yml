@@ -1,2 +1,5 @@
 ---
 # defaults file for windows-docker-role
+minimum_nuget_version: 2.8.5.201
+reboots_allowed: false
+open_ports_globally: false

@@ -1,2 +1,114 @@
 ---
 # tasks file for windows-docker-role
+
+- name: Check if docker is installed
+  win_shell: docker
+  register: docker_check
+  changed_when: false
+  ignore_errors: true
+
+- name: Check if Nuget is installed already
+  win_shell: Get-PackageProvider NuGet
+  register: nuget_check
+  changed_when: false
+  when: docker_check is failed or docker_check is failed
+  ignore_errors: true
+
+- name: Install Nuget provider
+  win_shell: "Install-PackageProvider -Name NuGet -MinimumVersion {{ minimum_nuget_version }} -Force"
+  when: nuget_check is failed
+
+- name: Check if DockerMsftProvider is installed already
+  win_shell: "(Get-InstalledModule DockerMsftProvider)[0].Version.Major"
+  register: docker_provider_check
+  ignore_errors: yes
+  changed_when: false
+
+- name: Add PS Repo for Docker
+  win_psmodule:
+    name: DockerMsftProvider
+    repository: PSGallery
+  when: docker_provider_check is failed and docker_check is failed
+
+- name: Install Docker
+  win_shell: "Install-Package -Name docker -ProviderName DockerMsftProvider -Force"
+  when: docker_check is failed
+  registers: docker_install_response
+
+- name: Make certificate directories
+  win_file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - C:\Docker-SSL\client\.docker
+    - C:\Docker-SSL\server
+
+- name: Open necessary ports
+  win_shell: |
+    Import-Module NetSecurity
+    $prot = "{{ item.protocol }}"
+    $port = "{{ item.port }}"
+    [Microsoft.PowerShell.Cmdletization.GeneratedTypes.NetSecurity.Profile] $profile = "{{ item.profile }}"
+    [Microsoft.PowerShell.Cmdletization.GeneratedTypes.NetSecurity.Direction] $direction = "{{ item.direction }}"
+    $name = "{{ item.name }}"
+
+    [Microsoft.PowerShell.Cmdletization.GeneratedTypes.NetSecurity.Direction] $inbound = "Inbound"
+    [bool] $found = $false
+
+
+    $portfilters = (Get-NetFirewallPortFilter | Where-Object {$_.LocalPort -eq $port})
+    foreach($portfilter in $portfilters)
+    {
+        $rule = ($portfilter | Get-NetFirewallRule)
+        if(
+            $rule.DisplayName -eq $name -And
+            $rule.Enabled -eq $true -And
+            $rule.Action -eq "Allow" -And
+            $rule.Direction.CompareTo($direction) -eq 0 -And
+            $rule.Profile.CompareTo($profile) -eq 0
+        )
+        {
+            $found = $true
+        }
+    }
+
+    if(!$found)
+    {
+        echo "${direction} ${port}/${prot} ${profile}: Not found, adding!"
+        New-NetFirewallRule -DisplayName $name -LocalPort $port -Profile $profile -Direction $direction -Protocol $prot
+        $res = $?
+        if($res -eq $true)
+        {
+          exit 0
+        }
+        else
+        {
+          exit 2
+        }
+    }
+    else
+    {
+        echo "${direction} ${port}/${prot} ${profile}: Found!"
+        exit 1
+    }
+  loop:
+    - { port: 2376, protocol: "TCP", profile: "Domain", direction: "Inbound", name: "Docker TLS port"}
+    - { port: 2377, protocol: "TCP", profile: "Domain", direction: "Inbound", name: "Docker cluster management communications"}
+    - { port: 7946, protocol: "TCP", profile: "Domain", direction: "Inbound", name: "Docker node communications (TCP)" }
+    - { port: 7946, protocol: "UDP", profile: "Domain", direction: "Inbound", name: "Docker node communications (UDP)" }
+    - { port: 4789, protocol: "UDP", profile: "Domain", direction: "Inbound", name: "Docker overlay network traffic" }
+    - { port: 2376, protocol: "TCP", profile: "Domain", direction: "Outbound", name: "Docker TLS port"}
+    - { port: 2377, protocol: "TCP", profile: "Domain", direction: "Outbound", name: "Docker cluster management communications"}
+    - { port: 7946, protocol: "TCP", profile: "Domain", direction: "Outbound", name: "Docker node communications (TCP)" }
+    - { port: 7946, protocol: "UDP", profile: "Domain", direction: "Outbound", name: "Docker node communications (UDP)" }
+    - { port: 4789, protocol: "UDP", profile: "Domain", direction: "Outbound", name: "Docker overlay network traffic" }
+  changed_when: firewall_res.rc == 0
+  failed_when: firewall_res.rc == 2
+  register: firewall_res
+  when: open_ports_globally is enabled
+
+- name: Make sure docker is started
+  win_service:
+    name: Docker
+    state: started
+
