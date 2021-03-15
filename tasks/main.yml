@@ -25,7 +25,7 @@
   changed_when: false
 
 - name: Add PS Repo for Docker
-  win_psmodule:
+  community.windows.win_psmodule:
     name: DockerMsftProvider
     repository: PSGallery
   when: docker_provider_check is failed and docker_check is failed

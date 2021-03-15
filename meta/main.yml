@@ -19,6 +19,6 @@ galaxy_info:
 
 
 dependencies:
-  -  ansible.windows
+  -  community.windows
 
   
