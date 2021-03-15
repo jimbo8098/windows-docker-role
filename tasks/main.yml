@@ -33,7 +33,7 @@
 - name: Install Docker
   win_shell: "Install-Package -Name docker -ProviderName DockerMsftProvider -Force"
   when: docker_check is failed
-  registers: docker_install_response
+  register: docker_install_response
 
 - name: Make certificate directories
   win_file:
