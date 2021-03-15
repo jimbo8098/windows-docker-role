@@ -4,12 +4,14 @@ python: "2.7"
 
 # Use the new container infrastructure
 sudo: false
+dist: focal
 
 # Install ansible
 addons:
   apt:
     packages:
     - python-pip
+    - vagrant=6.1
 
 install:
   # Install ansible
