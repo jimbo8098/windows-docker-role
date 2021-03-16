@@ -17,10 +17,11 @@
 - name: Update Powershell
   ansible.windows.win_package:
     path: https://github.com/PowerShell/PowerShell/releases/download/v7.1.3/PowerShell-7.1.3-win-x64.msi
+    product_id: '{6488FC90-3CAB-4246-A212-1AD7BDE685F7}'
 
 
-- name: Ensure DSC Resources are up to date
-  win_shell: Install-Module -Name PowerShellGet -RequiredVersion 2.2.5 -Force
+#- name: Ensure DSC Resources are up to date
+#  win_shell: Install-Module -Name PowerShellGet -RequiredVersion 2.2.5 -Force
 
 - name: Ensure relevant modules are installed
   win_psmodule:
@@ -28,6 +29,7 @@
     repository: "{{ item.repo }}"
   loop: 
     - name: PowerShellGet
+      repo: 
     - name: DockerMsftProvider 
       repo: PSGallery
       
