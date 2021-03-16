@@ -1,12 +1,2 @@
 ---
 # handlers file for windows-docker-role
-
-- name: Restart following PowerShell install
-  win_reboot:
-    reboot_timeout: 1200
-  when: reboots_allowed
-
-- name: Restart following Docker install
-  win_reboot:
-    reboot_timeout: 1200
-  when: reboots_allowed
