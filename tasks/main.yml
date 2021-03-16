@@ -15,13 +15,11 @@
   win_shell: |
     $result = Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
     $exitCode = $?
-    if($exitCode -eq "0")
-    {
+    if($exitCode -eq "0") {
       $installedVersion = [System.Version]($result)[0].Version
       $minSupportedVersion = [System.Version]"{{expected_nuget_minimum_version}}"
       echo "$installedVersion > $minSupportedVersion"
-      if($installedVersion -gt $minSupportedVersion)
-      {
+      if($installedVersion -gt $minSupportedVersion) {
         exit 0
       } else {
         exit 1
