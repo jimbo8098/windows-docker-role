@@ -15,7 +15,12 @@
   ignore_errors: true
 
 - name: Ensure DSC Resources are up to date
-  win_shell: Install-Module -Name PackageManagement -Force
+  win_shell: Install-Module -Name PowerShellGet -RequiredVersion 2.2.5 -Force
+
+- name: Ensure PackageManagement is installed
+  win_dsc:
+    resource_name: PSModule
+    Name: PackageManagement
 
 - name: Ensure Nuget provider is installed
   win_dsc:
