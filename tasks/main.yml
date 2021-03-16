@@ -18,6 +18,7 @@
   win_dsc:
     resource_name: PackageManagementSource 
     Ensure: Present
+    Name: MyNuget
     ProviderName: Nuget
     SourceUri: https://api.nuget.org/api/v3/
     InstallationPolicy: Trusted
