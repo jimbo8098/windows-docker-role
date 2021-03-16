@@ -34,7 +34,6 @@
 
 
 - name: Ensure Nuget provider is installed
-  win_psmodule:
   win_dsc:
     resource_name: PackageManagementSource 
     Ensure: Present
