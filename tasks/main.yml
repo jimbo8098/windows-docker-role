@@ -1,73 +1,26 @@
 ---
 # tasks file for windows-docker-role
 
-- name: Check if docker is installed
-  win_shell: docker
-  register: docker_check
-  changed_when: false
-  ignore_errors: true
-
-- name: Check if Nuget is installed already
-  win_shell: Get-PackageProvider NuGet
-  register: nuget_check
-  changed_when: false
-  when: docker_check is failed
-  ignore_errors: true
-
 - name: Update Powershell
   ansible.windows.win_package:
     path: https://github.com/PowerShell/PowerShell/releases/download/v7.1.3/PowerShell-7.1.3-win-x64.msi
     product_id: '{6488FC90-3CAB-4246-A212-1AD7BDE685F7}'
 
-
-#- name: Ensure DSC Resources are up to date
-#  win_shell: Install-Module -Name PowerShellGet -RequiredVersion 2.2.5 -Force
-
-- name: Ensure relevant modules are installed
+- name: Ensure PowerShellGet is installed
   win_psmodule:
     name: "PowerShellGet"
     minimum_version: 2.2.5
 
-- name: Ensure relevant modules are installed
+- name: Ensure DockerMsftProvider is installed
   win_psmodule:
     name: "DockerMsftProvider"
     repository: "PSGallery"
-      
-
-
-- name: Ensure Nuget provider is installed
-  win_dsc:
-    resource_name: PackageManagementSource 
-    Ensure: Present
-    Name: Nuget
-    ProviderName: Nuget
-    SourceLocation: https://api.nuget.org/api/v3/
-    InstallationPolicy: Trusted
-
-
-
-
-
-- name: Install Nuget provider
-  win_shell: "Install-PackageProvider -Name NuGet -MinimumVersion {{ minimum_nuget_version }} -Force"
-  when: nuget_check is failed
-
-- name: Check if DockerMsftProvider is installed already
-  win_shell: "(Get-InstalledModule DockerMsftProvider)[0].Version.Major"
-  register: docker_provider_check
-  ignore_errors: yes
-  changed_when: false
-
-- name: Add PS Repo for Docker
-  community.windows.win_psmodule:
-    name: DockerMsftProvider
-    repository: PSGallery
-  when: docker_provider_check is failed and docker_check is failed
 
 - name: Install Docker
-  win_shell: "Install-Package -Name docker -ProviderName DockerMsftProvider -Force"
-  when: docker_check is failed
-  register: docker_install_response
+  win_dsc:
+    resource_name: PackageManagement
+    Name: "docker"
+    ProviderName: DockerMsftProvider
 
 - name: Make certificate directories
   win_file:
