@@ -4,5 +4,6 @@ reboots_allowed: false
 open_ports_globally: false
 nuget_minimum_version: 2.8.5.201
 expected_nuget_minimum_version: 2.8.5.201
-powershell: msi_address: https://github.com/PowerShell/PowerShell/releases/download/v7.1.3/PowerShell-7.1.3-win-x64.msi
+powershell: 
+  msi_address: https://github.com/PowerShell/PowerShell/releases/download/v7.1.3/PowerShell-7.1.3-win-x64.msi
   product_id: '{6488FC90-3CAB-4246-A212-1AD7BDE685F7}'
