@@ -146,4 +146,3 @@
   win_service:
     name: Docker
     state: started
-
