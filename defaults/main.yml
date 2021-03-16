@@ -4,8 +4,6 @@ reboots_allowed: false
 setup_firewall_rules: false
 nuget_minimum_version: 2.8.5.201
 expected_nuget_minimum_version: 2.8.5.201
-powershell:
-  install_reboot_timeout: 600
 powershellget:
   minimum_version: 2.2.5
 docker:
@@ -16,3 +14,4 @@ docker:
 powershell: 
   msi_address: https://github.com/PowerShell/PowerShell/releases/download/v7.1.3/PowerShell-7.1.3-win-x64.msi
   product_id: '{6488FC90-3CAB-4246-A212-1AD7BDE685F7}'
+  install_reboot_timeout: 600
