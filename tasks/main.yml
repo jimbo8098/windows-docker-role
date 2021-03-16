@@ -5,6 +5,11 @@
   ansible.windows.win_package:
     path: https://github.com/PowerShell/PowerShell/releases/download/v7.1.3/PowerShell-7.1.3-win-x64.msi
     product_id: '{6488FC90-3CAB-4246-A212-1AD7BDE685F7}'
+  register: powershell_res
+
+- name: Reboot if required
+  win_reboot:
+  when: powershell_res.reboot_required | bool
 
 - name: Ensure PowerShellGet is installed
   win_psmodule:
