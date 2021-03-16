@@ -17,10 +17,16 @@
 - name: Ensure DSC Resources are up to date
   win_shell: Install-Module -Name PowerShellGet -RequiredVersion 2.2.5 -Force
 
-- name: Ensure PackageManagement is installed
+- name: Ensure {{ item.name }} is installed
   win_dsc:
     resource_name: PSModule
-    Name: PackageManagement
+    Name: "{{ item.name }}"
+    Repository: "{{ item.repo }}"
+  loop: 
+    - name: DockerMsftProvider 
+      repo: PSGallery
+      
+
 
 - name: Ensure Nuget provider is installed
   win_dsc:
