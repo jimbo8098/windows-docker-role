@@ -14,13 +14,16 @@
   when: docker_check is failed
   ignore_errors: true
 
+- name: Ensure DSC Resources are up to date
+  win_shell: Install-Module -Name PackageManagement -Force
+
 - name: Ensure Nuget provider is installed
   win_dsc:
     resource_name: PackageManagementSource 
     Ensure: Present
-    Name: MyNuget
+    Name: Nuget
     ProviderName: Nuget
-    SourceUri: https://api.nuget.org/v3
+    SourceLocation: https://api.nuget.org/v3
     InstallationPolicy: Trusted
 
 
