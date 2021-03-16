@@ -9,7 +9,9 @@ galaxy_info:
 
   platforms:
     - name: Windows
-      versions: all
+      versions:
+        - 2016
+        - 2019
 
   galaxy_tags: 
     - windows
