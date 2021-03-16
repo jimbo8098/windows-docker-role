@@ -29,7 +29,6 @@
     repository: "{{ item.repo }} | default('')"
   loop: 
     - name: PowerShellGet
-      repo: 
     - name: DockerMsftProvider 
       repo: PSGallery
       
