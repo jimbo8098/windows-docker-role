@@ -20,7 +20,7 @@
     Ensure: Present
     Name: MyNuget
     ProviderName: Nuget
-    SourceUri: https://api.nuget.org/api/v3/
+    SourceUri: https://api.nuget.org/v3
     InstallationPolicy: Trusted
 
 
