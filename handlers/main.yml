@@ -1,2 +1,7 @@
 ---
 # handlers file for windows-docker-role
+
+- name: Restart server
+  win_reboot:
+    reboot_timeout: 1200
+  when: reboots_allowed
