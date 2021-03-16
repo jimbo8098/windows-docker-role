@@ -35,7 +35,7 @@
     }
   register: nuget_res
   failed_when: nuget_res.rc != 0
-  when: nuget_check.stderr != null
+  when: nuget_check.stderr != ""
 
 
 - name: Ensure PowerShellGet is installed
