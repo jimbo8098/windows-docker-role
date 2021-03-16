@@ -15,6 +15,7 @@
   win_shell: Get-PackageProvider Nuget -ListAvailable
   register: nuget_check
   changed_when: false
+  ignore_errors: true
   
 - name: Ensure Nuget is installed
   win_shell: |
