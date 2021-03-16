@@ -1,7 +1,7 @@
 ---
 # handlers file for windows-docker-role
 
-- name: Restart server
+- name: Restart server following Docker changes
   win_reboot:
-    reboot_timeout: 1200
+    reboot_timeout: "{{ docker.install_reboot_timeout }}"
   when: reboots_allowed

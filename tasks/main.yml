@@ -9,6 +9,7 @@
 
 - name: Reboot if required
   win_reboot:
+    reboot_timeout: "{{ powershell.install_reboot_timeout }}"
   when: powershell_res.reboot_required and reboots_allowed
 
 - name: Check nuget is installed
@@ -40,20 +41,31 @@
 - name: Ensure PowerShellGet is installed
   win_psmodule:
     name: "PowerShellGet"
-    minimum_version: 2.2.5
+    minimum_version: "{{ powershellget.minimum_version }}"
 
 - name: Ensure DockerMsftProvider is installed
   win_psmodule:
     name: "DockerMsftProvider"
     repository: "PSGallery"
 
-- name: Install Docker
+- name: Install latest Docker version
   win_dsc:
     resource_name: PackageManagement
     Name: "docker"
     ProviderName: DockerMsftProvider
   notify:
-    - Restart server
+    - Restart server following Docker changes
+  when: docker.version == "latest"
+
+- name: Install specific Docker version
+  win_dsc:
+    resource_name: PackageManagement
+    Name: "docker"
+    ProviderName: DockerMsftProvider
+    RequiredVersion: "{{ docker.version }}"
+  notify:
+    - Restart server following Docker changes
+  when: docker.version != "latest"
 
 - name: Flush handlers to reboot immediately
   meta: flush_handlers
@@ -115,20 +127,20 @@
         exit 1
     }
   loop:
-    - { port: 2376, protocol: "TCP", profile: "Domain", direction: "Inbound", name: "Docker TLS port"}
-    - { port: 2377, protocol: "TCP", profile: "Domain", direction: "Inbound", name: "Docker cluster management communications"}
-    - { port: 7946, protocol: "TCP", profile: "Domain", direction: "Inbound", name: "Docker node communications (TCP)" }
-    - { port: 7946, protocol: "UDP", profile: "Domain", direction: "Inbound", name: "Docker node communications (UDP)" }
-    - { port: 4789, protocol: "UDP", profile: "Domain", direction: "Inbound", name: "Docker overlay network traffic" }
-    - { port: 2376, protocol: "TCP", profile: "Domain", direction: "Outbound", name: "Docker TLS port"}
-    - { port: 2377, protocol: "TCP", profile: "Domain", direction: "Outbound", name: "Docker cluster management communications"}
-    - { port: 7946, protocol: "TCP", profile: "Domain", direction: "Outbound", name: "Docker node communications (TCP)" }
-    - { port: 7946, protocol: "UDP", profile: "Domain", direction: "Outbound", name: "Docker node communications (UDP)" }
-    - { port: 4789, protocol: "UDP", profile: "Domain", direction: "Outbound", name: "Docker overlay network traffic" }
+    - { port: 2376, protocol: "TCP", profile: "{{ docker.firewallprofile }}", direction: "Inbound", name: "Docker TLS port"}
+    - { port: 2377, protocol: "TCP", profile: "{{ docker.firewallprofile }}", direction: "Inbound", name: "Docker cluster management communications"}
+    - { port: 7946, protocol: "TCP", profile: "{{ docker.firewallprofile }}", direction: "Inbound", name: "Docker node communications (TCP)" }
+    - { port: 7946, protocol: "UDP", profile: "{{ docker.firewallprofile }}", direction: "Inbound", name: "Docker node communications (UDP)" }
+    - { port: 4789, protocol: "UDP", profile: "{{ docker.firewallprofile }}", direction: "Inbound", name: "Docker overlay network traffic" }
+    - { port: 2376, protocol: "TCP", profile: "{{ docker.firewallprofile }}", direction: "Outbound", name: "Docker TLS port"}
+    - { port: 2377, protocol: "TCP", profile: "{{ docker.firewallprofile }}", direction: "Outbound", name: "Docker cluster management communications"}
+    - { port: 7946, protocol: "TCP", profile: "{{ docker.firewallprofile }}", direction: "Outbound", name: "Docker node communications (TCP)" }
+    - { port: 7946, protocol: "UDP", profile: "{{ docker.firewallprofile }}", direction: "Outbound", name: "Docker node communications (UDP)" }
+    - { port: 4789, protocol: "UDP", profile: "{{ docker.firewallprofile }}", direction: "Outbound", name: "Docker overlay network traffic" }
   changed_when: firewall_res.rc == 0
   failed_when: firewall_res.rc == 2
   register: firewall_res
-  when: open_ports_globally | bool
+  when: setup_firewall_rules | bool
 
 - name: Make sure docker is started
   win_service:
