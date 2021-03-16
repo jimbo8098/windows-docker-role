@@ -52,12 +52,12 @@
     resource_name: PackageManagement
     Name: "docker"
     ProviderName: DockerMsftProvider
-  register: docker_install_res and reboots_allowed
+  register: docker_install_res
 
 - name: Restart if necessary
   win_reboot:
     reboot_timeout: 1200
-  when: docker_install_res.reboot_required
+  when: docker_install_res.reboot_required and reboots_allowed
 
 - name: Make certificate directories
   win_file:
