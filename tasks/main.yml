@@ -17,6 +17,8 @@
     $exitCode = $?
     if($exitCode -eq 0)
     {
+      echo "${[System.Version]($result)[0].Version} > ${[System.Version]{{ expected_nuget_minimum_version }}}"
+      echo "${[System.Version]($result)[0].Version -gt [System.Version]{{ expected_nuget_minimum_version }}}"
       if([System.Version]($result)[0].Version -gt [System.Version]{{ expected_nuget_minimum_version }})
       {
         return 0
