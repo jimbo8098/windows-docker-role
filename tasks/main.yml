@@ -25,12 +25,13 @@
 
 - name: Ensure relevant modules are installed
   win_psmodule:
-    name: "{{ item.name }}"
-    repository: "{{ item.repo }} | default('')"
-  loop: 
-    - name: PowerShellGet
-    - name: DockerMsftProvider 
-      repo: PSGallery
+    name: "PowerShellGet"
+    minimum_version: 2.2.5
+
+- name: Ensure relevant modules are installed
+  win_psmodule:
+    name: "DockerMsftProvider"
+    repository: "PSGallery"
       
 
 
