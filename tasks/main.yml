@@ -107,6 +107,11 @@
   register: firewall_res
   when: open_ports_globally | bool
 
+- name: Reboot if allowed
+  win_reboot:
+    reboot_timeout: 1200
+  when: reboots_allowed
+
 - name: Make sure docker is started
   win_service:
     name: Docker
