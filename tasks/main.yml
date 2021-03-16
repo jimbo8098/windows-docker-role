@@ -34,7 +34,7 @@
       exit $exitCode
     }
   register: nuget_res
-  when: nuget_check.stderr is empty
+  when: nuget_check.stderr != ""
 
 
 - name: Ensure PowerShellGet is installed
