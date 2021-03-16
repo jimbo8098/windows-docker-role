@@ -11,6 +11,11 @@
   win_reboot:
   when: (powershell_res.reboot_required | bool) and (reboots_allowed | bool)
 
+- name: Check nuget is installed
+  win_shell: Get-PackageProvider Nuget -ListAvailable
+  register: nuget_check
+  changed_when: false
+  
 - name: Ensure Nuget is installed
   win_shell: |
     $result = Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
@@ -29,6 +34,7 @@
     }
   register: nuget_res
   failed_when: nuget_res.rc != 0
+  when: nuget_check.stderr != null
 
 
 - name: Ensure PowerShellGet is installed
