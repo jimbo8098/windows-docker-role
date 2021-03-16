@@ -11,7 +11,7 @@
   win_shell: Get-PackageProvider NuGet
   register: nuget_check
   changed_when: false
-  when: docker_check is failed or docker_check is failed
+  when: docker_check is failed
   ignore_errors: true
 
 - name: Install Nuget provider
