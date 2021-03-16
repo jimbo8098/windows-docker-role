@@ -23,7 +23,7 @@
     Ensure: Present
     Name: Nuget
     ProviderName: Nuget
-    SourceLocation: https://api.nuget.org/v3
+    SourceLocation: https://api.nuget.org/api/v3/
     InstallationPolicy: Trusted
 
 
