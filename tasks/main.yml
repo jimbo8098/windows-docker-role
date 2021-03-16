@@ -11,6 +11,29 @@
   win_reboot:
   when: (powershell_res.reboot_required | bool) and (reboots_allowed | bool)
 
+- name: Ensure Nuget is installed
+  win_shell: |
+    $result = Install-PackageProvider -Name NuGet -MinimumVersion {{ nuget_minimum_version }} -Force
+    $exitCode = $?
+    if($exitCode -eq 0)
+    {
+      if([System.Version]($result)[0].Version -gt [System.Version]{{ expected_nuget_minimum_version }})
+      {
+        return 0
+      }
+      else
+      {
+        return 1
+      }
+    }
+    else
+    {
+      exit $exitCode
+    }
+  register: nuget_res
+  failed_when: nuget_res.rc != 0
+
+
 - name: Ensure PowerShellGet is installed
   win_psmodule:
     name: "PowerShellGet"
