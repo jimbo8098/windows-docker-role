@@ -55,6 +55,9 @@
   notify:
     - Restart server
 
+- name: Flush handlers to reboot immediately
+  meta: flush_handlers
+
 - name: Make certificate directories
   win_file:
     path: "{{ item }}"
