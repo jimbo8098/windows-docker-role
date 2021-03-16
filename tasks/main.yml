@@ -17,20 +17,16 @@
     $exitCode = $?
     if($exitCode -eq "0")
     {
-	    $installedVersion = [System.Version]($result)[0].Version
+      $installedVersion = [System.Version]($result)[0].Version
       $minSupportedVersion = [System.Version]"{{expected_nuget_minimum_version}}"
       echo "$installedVersion > $minSupportedVersion"
       if($installedVersion -gt $minSupportedVersion)
       {
         exit 0
-      }
-      else
-      {
+      } else {
         exit 1
       }
-    }
-    else
-    {
+    } else {
       exit $exitCode
     }
   register: nuget_res
