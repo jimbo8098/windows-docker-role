@@ -19,8 +19,8 @@
     resource_name: PackageManagementSource 
     Ensure: Present
     Name: Nuget
-    MinimumVersion: "{{ minimum_nuget_version }}"
-    
+    #MinimumVersion: "{{ minimum_nuget_version }}"
+
 
 
 
