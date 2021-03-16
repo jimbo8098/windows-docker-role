@@ -128,7 +128,7 @@
 
 - name: Debug
   debug:
-    var: item
+    var: "{{ item }}"
   loop:
     - reboots_allowed
     - docker_install_res.reboot_required
