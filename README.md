@@ -41,13 +41,27 @@ Install the latest version of Docker, don't open ports:
           reboots_allowed: true
 ```
 
-Install and open ports for the Domain profile:
+Install and open ports for the Domain firewall profile:
 ```
   - hosts: servers
     roles:
         - role: windows-docker-role
           reboots_allowed: true
           setup_firewall_rules: true
+```
+
+Install and open ports for ALL firewall profiles:
+```
+  - hosts: servers
+    roles:
+        - role: windows-docker-role
+          reboots_allowed: true
+          setup_firewall_rules: true
+          #Must initialize the entire docker object https://github.com/jimbo8098/windows-docker-role/issues/2
+          docker:
+            install_reboot_timeout: 1200
+            version: latest
+            firewallprofile: domain,private,public
 ```
 
 Install a specific version of Docker:
