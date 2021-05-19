@@ -67,9 +67,6 @@
     - Restart server following Docker changes
   when: docker.version != "latest"
 
-- name: Flush handlers to reboot immediately
-  meta: flush_handlers
-
 - name: Make certificate directories
   win_file:
     path: "{{ item }}"
@@ -141,8 +138,3 @@
   failed_when: firewall_res.rc == 2
   register: firewall_res
   when: setup_firewall_rules | bool
-
-- name: Make sure docker is started
-  win_service:
-    name: Docker
-    state: started
