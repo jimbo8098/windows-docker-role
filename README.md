@@ -1,7 +1,7 @@
 windows-docker-role
 =========
 
-This role installs Docker on a Windows server using the officially supported methods provided at https://docs.microsoft.com/en-us/virtualization/windowscontainers/deploy-containers/deploy-containers-on-server
+This role installs Docker on a Windows server using the officially supported methods provided at https://docs.microsoft.com/en-us/virtualization/windowscontainers/deploy-containers/deploy-containers-on-server. *Note that Windows requires a reboot following the installation of the Containers feature and this rike reboots the server if necessary.*
 
 Requirements
 ------------
@@ -12,7 +12,6 @@ Requirements
 Role Variables
 --------------
 
-- `reboots_allowed`: Allow the server to be rebooted following the Docker install. Reboots are done during the installation of PowerShell (if the reboot sets the reboot required variable) and the docker installation if the DSC module reports a change. You'd likely want to leave this on unless you're in a production environment. Defaults to false.
 - `setup_firewall_rules`: Open all Docker ports using the defined `docker.firewallprofile` profile. Defaults to false.
 - `nuget_minimum_version`: The minimum desired version of NuGet to install. Defaults to 2.8.5.201 which is required for the tasks to run.
 - `expected_nuget_minimum_version`: The minimum versionof NuGet required for the tasks to run. Placed here in case something is updated and this version changes. Defaults to 2.8.5.201 which is the current requirement.
@@ -46,7 +45,6 @@ Install and open ports for the Domain firewall profile:
   - hosts: servers
     roles:
         - role: windows-docker-role
-          reboots_allowed: true
           setup_firewall_rules: true
 ```
 
@@ -55,7 +53,6 @@ Install and open ports for ALL firewall profiles:
   - hosts: servers
     roles:
         - role: windows-docker-role
-          reboots_allowed: true
           setup_firewall_rules: true
           #Must initialize the entire docker object https://github.com/jimbo8098/windows-docker-role/issues/2
           docker:
