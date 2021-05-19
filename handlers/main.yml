@@ -4,4 +4,3 @@
 - name: Restart server following Docker changes
   win_reboot:
     reboot_timeout: "{{ docker.install_reboot_timeout }}"
-  when: reboots_allowed
