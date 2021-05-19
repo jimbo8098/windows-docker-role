@@ -1,7 +1,7 @@
 windows-docker-role
 =========
 
-This role installs Docker on a Windows server using the officially supported methods provided at https://docs.microsoft.com/en-us/virtualization/windowscontainers/deploy-containers/deploy-containers-on-server. *Note that Windows requires a reboot following the installation of the Containers feature and this rike reboots the server if necessary.*
+This role installs Docker on a Windows server using the officially supported methods provided at https://docs.microsoft.com/en-us/virtualization/windowscontainers/deploy-containers/deploy-containers-on-server. **Note that Windows requires a reboot following the installation of the Containers feature and this rike reboots the server if necessary.**
 
 Requirements
 ------------
