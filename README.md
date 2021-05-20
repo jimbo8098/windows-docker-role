@@ -37,7 +37,6 @@ Install the latest version of Docker, don't open ports:
   - hosts: servers
     roles:
         - role: windows-docker-role
-          reboots_allowed: true
 ```
 
 Install and open ports for the Domain firewall profile:
@@ -67,7 +66,6 @@ Install a specific version of Docker:
     roles:
         - role: windows-docker-role
           docker:
-            reboots_allowed: true
             version: 18.03
 ```
 
