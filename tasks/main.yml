@@ -10,7 +10,7 @@
 - name: Reboot if required
   win_reboot:
     reboot_timeout: "{{ powershell.install_reboot_timeout }}"
-  when: powershell_res.reboot_required and reboots_allowed
+  when: powershell_res.reboot_required
 
 - name: Check nuget is installed
   win_shell: Get-PackageProvider Nuget -ListAvailable
@@ -66,9 +66,6 @@
   notify:
     - Restart server following Docker changes
   when: docker.version != "latest"
-
-- name: Flush handlers to reboot immediately
-  meta: flush_handlers
 
 - name: Make certificate directories
   win_file:
@@ -142,6 +139,7 @@
   register: firewall_res
   when: setup_firewall_rules | bool
 
+<<<<<<< HEAD
 - name: Flush handlers to reboot if necessary.
   meta: flush_handlers
 
@@ -149,3 +147,7 @@
   win_service:
     name: Docker
     state: started
+=======
+- name: Flush handlers to ensure the server is restarted if needed
+  meta: flush_handlers
+>>>>>>> a812fc806f1185443319c86dfddac2495a08ce67
