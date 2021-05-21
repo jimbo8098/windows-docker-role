@@ -139,7 +139,6 @@
   register: firewall_res
   when: setup_firewall_rules | bool
 
-<<<<<<< HEAD
 - name: Flush handlers to reboot if necessary.
   meta: flush_handlers
 
@@ -147,7 +146,3 @@
   win_service:
     name: Docker
     state: started
-=======
-- name: Flush handlers to ensure the server is restarted if needed
-  meta: flush_handlers
->>>>>>> a812fc806f1185443319c86dfddac2495a08ce67
