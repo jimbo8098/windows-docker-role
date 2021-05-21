@@ -142,6 +142,9 @@
   register: firewall_res
   when: setup_firewall_rules | bool
 
+- name: Flush handlers to reboot if necessary.
+  meta: flush_handlers
+
 - name: Make sure docker is started
   win_service:
     name: Docker
