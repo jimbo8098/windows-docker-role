@@ -5,11 +5,12 @@
   ansible.builtin.debug:
     var: ansible_facts
 
-- name: Update Powershell
+- name: Update Powershell (ignore 1603)
   ansible.windows.win_package:
     path: "{{ powershell.msi_address }}"
     product_id: "{{ powershell.product_id }}"
   register: powershell_res
+  failed_when: powershell_res.rc != 0 and powershell_res.rc != 1603
 
 - name: Reboot if required
   win_reboot:
