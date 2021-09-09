@@ -1,0 +1,5 @@
+roles:
+  - role: jimbo8098.windows-docker-role
+    scm: git
+    version: ps-version-upgrade-bypass
+    src: git@github.com:jimbo8098/windows-docker-role.git

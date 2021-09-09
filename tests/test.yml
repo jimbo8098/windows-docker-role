@@ -1,0 +1,4 @@
+---
+- hosts: all
+  roles:
+    - jimbo8098.windows-docker-role
