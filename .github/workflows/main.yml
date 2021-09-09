@@ -24,4 +24,4 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: tests/roles/jimbo8098.windows_docker_role
-          ref: $GITHUB_SHA
+          ref: ${{ github.sha }}
