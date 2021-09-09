@@ -1,10 +1,5 @@
 ---
 # tasks file for windows-docker-role
-
-- name: Print all available facts
-  ansible.builtin.debug:
-    var: ansible_facts
-
 - name: Update Powershell (ignore 1603)
   ansible.windows.win_package:
     path: "{{ powershell.msi_address }}"
